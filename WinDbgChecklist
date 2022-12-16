@@ -1,0 +1,90 @@
+General:
+
+Symbol servers (.symfix)
+Internal database(s) search
+Google or Microsoft search for suspected components as this could be a known issue. Sometimes a simple search immediately points to the fix on a vendor’s site
+The tool used to save a dump (to flag false positive, incomplete or inconsistent dumps)
+OS/SP version (version)
+Language
+Debug time
+System uptime
+Computer name (dS srv!srvcomputername or !envvar COMPUTERNAME)
+List of loaded and unloaded modules (lmv or !dlls)
+Hardware configuration (!sysinfo)
+.kframes 1000
+Application or service:
+
+Default analysis (!analyze -v or !analyze -v -hang for hangs)
+Critical sections (!cs -s -l -o, !locks) for both crashes and hangs
+Component timestamps, duplication and paths. DLL Hell? (lmv and !dlls)
+Do any newer components exist?
+Process threads (~*kv or !uniqstack) for multiple exceptions and blocking functions
+Process uptime
+Your components on the full raw stack of the problem thread
+Your components on the full raw stack of the main application thread
+Process size
+Number of threads
+Gflags value (!gflag)
+Time consumed by threads (!runaway)
+Environment (!peb)
+Import table (!dh)
+Hooked functions (!chkimg)
+Exception handlers (!exchain)
+Computer name (!envvar COMPUTERNAME)
+Process heap stats and validation (!heap -s, !heap -s -v)
+CLR threads? (mscorwks or clr modules on stack traces) Yes: use .NET checklist below
+Hidden (unhandled and handled) exceptions on thread raw stacks
+System hang:
+
+Default analysis (!analyze -v -hang)
+ERESOURCE contention (!locks)
+Processes and virtual memory including session space (!vm 4)
+Important services are present and not hanging
+Pools (!poolused)
+Waiting threads (!stacks)
+Critical system queues (!exqueue f)
+I/O (!irpfind)
+The list of all thread stack traces (!process 0 3f)
+LPC/ALPC chain for suspected threads (!lpc message or !alpc /m after search for "Waiting for reply to LPC" or "Waiting for reply to ALPC" in !process 0 3f output)
+RPC threads (search for "RPCRT4!OSF" in !process 0 3f output)
+Mutants (search for "Mutants - owning thread" in !process 0 3f output)
+Critical sections for suspected processes (!cs -l -o -s)
+Sessions, session processes (!session, !sprocess)
+Processes (size, handle table size) (!process 0 0)
+Running threads (!running)
+Ready threads (!ready)
+DPC queues (!dpcs)
+The list of APCs (!apc)
+Internal queued spinlocks (!qlocks)
+Computer name (dS srv!srvcomputername)
+File cache, VACB (!filecache)
+File objects for blocked thread IRPs (!irp -> !fileobj)
+Network (!ndiskd.miniports and !ndiskd.pktpools)
+Disk (!scsikd.classext -> !scsikd.classext class_device 2)
+Modules rdbss, mrxdav, mup, mrxsmb in stack traces
+Functions Ntfs!Ntfs*, nt!Fs* and fltmgr!Flt* in stack traces
+BSOD:
+
+Default analysis (!analyze -v)
+Pool address (!pool)
+Component timestamps (lmv)
+Processes and virtual memory (!vm 4)
+Current threads on other processors
+Raw stack
+Bugcheck description (including ln exception address for corrupt or truncated dumps)
+Bugcheck callback data (!bugdump for systems prior to Windows XP SP1)
+Bugcheck secondary callback data (.enumtag)
+Computer name (dS srv!srvcomputername)
+Hardware configuration (!sysinfo)
+.NET application or service:
+
+CLR module and SOS extension versions (lmv and .chain)
+Managed exceptions (~*e !pe)
+Nested managed exceptions (!pe -nested)
+Managed threads (!Threads -special)
+Managed stack traces (~*e !CLRStack)
+Managed execution residue (~*e !DumpStackObjects and !DumpRuntimeTypes)
+Managed heap (!VerifyHeap, !DumpHeap -stat and !eeheap -gc)
+GC handles (!GCHandles, !GCHandleLeaks)
+Finalizer queue (!FinalizeQueue)
+Sync blocks (!syncblk)
